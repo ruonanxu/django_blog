@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}发布博客{% endblock %}
+
+{% block statics%}
+    <link
+      href="https://unpkg.com/@wangeditor/editor@latest/dist/css/style.css"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/@wangeditor/editor@latest/dist/index.js"></script>     <!--可刷新页面，在network中查看文件是否加载成功 ，有文件，并返回状态 200 即成功-->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="{% static 'js/blog_pub.js'%}"></script>
+    <style>
+      #editor—wrapper {
+        border: 1px solid #ccc;
+        z-index: 100; /* 按需定义 */
+      }
+      #toolbar-container {
+        border-bottom: 1px solid #ccc;
+      }
+      #editor-container {
+        height: 500px;
+      }
+    </style>
+{% endblock %}
+
+{% block main %}
+    <h1>发布博客</h1>
+    <div class="mt-3">
+      <form action="" method="POST">
+          {% csrf_token %}
+        <div class="mb-2">
+          <label for="title" class="form-label">标题</label>
+          <input type="text" class="form-control" placeholder="请输入标题" name="title" id="title">
+        </div>
+       <div class="mb-2">
+          <label for="category" class="form-label">分类</label>
+          <select class="form-select"  name="category" id="category">
+    <!--        <option selected>Open this select menu</option>-->
+              {% for category in categories %}
+                <option value="{{category.id}}">{{category.name}}</option>
+              {% endfor %}
+          </select>
+        </div>
+       <div class="mb-2">
+          <label class="form-label">内容</label>
+          <div id="editor—wrapper">
+           <div id="toolbar-container"><!-- 工具栏 --></div>
+           <div id="editor-container"><!-- 编辑器 --></div>
+          </div>
+        </div>
+        <div class="text-end mt-2">  <!--将非块级的文本元素 放到右边 -->
+          <button class="btn btn-primary" id="submit-btn">发布</button>
+        </div>
+      </form>
+    </div>
+{% endblock %}

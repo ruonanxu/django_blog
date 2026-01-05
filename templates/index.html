@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}博客列表页{% endblock %}
+
+{% block main %}
+    {% if search_key %}
+        搜索结果：{{ search_key }}（共 {{ blog_lists|length }} 篇）
+    {% else %}
+        博客首页
+    {% endif %}
+
+   <div class="row row-cols-2 row-gap-4 h-100">
+       {% for blog in blog_lists %}
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-header">
+                       <a href="{% url 'blog:详情页' blog.id %}">{{blog.title}}</a>
+                    </div>
+                    <div class="card-body" style="height: 100px">
+                        <p class="card-text">{{blog.content|striptags|truncatechars:50}}</p>
+                    </div>
+                    <div class="card-footer text-body-secondary d-flex justify-content-between">
+                        <div>
+                            <img src="{% static 'image/baby.jpg' %}" class="rounded-circle" height="30" width = "30">
+                            {{blog.author.username}}
+                        </div>
+                        <div>
+                            发布时间：{{blog.pub_time}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+       {% empty %}
+   <!-- 无博客提示框：col-span-2 占满 2 列，h-100 占满容器高度，d-flex 垂直居中 -->
+            <div class="col col-span-2 h-100">
+                <div class="alert alert-light text-center d-flex align-items-center justify-content-center h-100 border" style="min-height: 200px;">
+                    {% if search_key %}
+                        暂无与 "{{ search_key }}" 相关的博客～
+                    {% else %}
+                        暂无博客，快来发布第一篇吧～
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}

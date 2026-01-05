@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}博客详情页{% endblock %}
+
+{% block statics%}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+{% endblock %}
+
+{% block main %}
+<h1>博客详情页</h1>
+<hr>
+<div>
+    <h3>标题：{{blog.title}}</h3>
+   <img src="{% static 'image/baby.jpg' %}" class="rounded-circle" height="30" width = "30">
+   <span class="ms-2">{{blog.author.username}}</span>
+  <span class="ms-1">于</span>
+  <span class="ms-1">{{ blog.pub_time|date:"Y年m月d日 H:i" }}</span>发布
+</div>
+<hr>
+<div>{{blog.content|safe}}</div>
+<hr>
+<div class="mt-2">
+  <h3>评论（{{blog.comments.all|length}}）条：</h3>
+  <form action="{% url 'blog:发布评论' blog.id %}" method="POST">
+    {% csrf_token %}
+    <div class="mt-2">
+      <input type="text" class="form-control" placeholder="请输入评论" name="comment">
+    </div>
+    <div class="text-end mt-2">  <!--将非块级的文本元素 放到右边 -->
+      <button class="btn btn-primary" type="submit">评论</button>
+    </div>
+    <div class=" mt-2">  <!--将非块级的文本元素 放到右边 -->
+      <ul class="list-group list-group-flush">
+        {% for comment in blog.comments.all %}
+        <li class="list-group-item mb-2">
+          <div class="d-flex justify-content-between text-body-secondary"> <!--设置盒子分布 左右分组 -->
+            <div class="user-info">
+              <img src="{% static 'image/baby.jpg' %}" class="rounded-circle" height="30" width = "30">
+              <span class="ms-2">{{comment.author.username}}</span>
+            </div>
+            <div class="create-time" style="line-height: 46px;">发布时间：{{ comment.pub_time|date:"Y年m月d日 H:i" }}</div>
+          </div>
+          <div class=" mt-1">
+            <span class="ms-2">{{comment.comment}}</span>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </form>
+
+</div>
+<script>
+  hljs.highlightAll();
+</script>
+
+{% endblock %}
